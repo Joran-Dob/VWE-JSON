@@ -21,39 +21,36 @@ $html_details_d->load($d_c_d);
 
 echo "[";
 if ($req == "overig") {
-    $p_overig = $html_details_d->find('p', 0);
+    //$p_overig = $html_details_d->find('p', 0);
     echo '{';
-    echo '"overig":"' . $p_overig->plaintext . '"';
+  //  echo '"overig":"' . $p_overig->plaintext . '"';
+  echo '"overig":""';
     echo '}';
 } elseif ($req == "description") {
-    foreach ($html_details_d->find('p[itemprop=description]') as $p_des) {
-        echo '{';
-        echo '"description":"' . preg_replace( "/\r|\n/", "", $p_des->plaintext ) . '"';
-        echo '}';
-    }
-} elseif ($req == "opties") {
-    foreach ($html_details_d->find('div[class=grid-5 alpha]') as $info_div1) {
-        foreach ($info_div1->find('li') as $li) {
+    foreach ($html_details_d->find('section[id=tab-remarks]') as $p_des) {
+        foreach ($p_des->find('div[class=tabContent]') as $tab_content) {
             echo '{';
-            echo '"opties":"' . $li->plaintext . '"';
-            echo '},';
+            echo '"description":"' . preg_replace("/\r|\n/", "", $tab_content->plaintext) . '"';
+            echo '}';
         }
     }
-    foreach ($html_details_d->find('div[class=grid-5 alpha omega]') as $info_div2) {
+} elseif ($req == "opties") {
+    foreach ($html_details_d->find('section[id=tab-options]') as $info_div1) {
+        $options;
         $li_n = 0;
 
 
-        $last = count($info_div2->find('li'));
-        foreach ($info_div2->find('li') as $li) {
+        $last = count($info_div1->find('li'));
+        foreach ($info_div1->find('li') as $li) {
             $li_n = $li_n+1;
-
-            echo '{';
-            echo '"opties":"' . $li->plaintext . '"';
-            if ($li_n==$last) {
-                echo '}';
-            } else {
-                echo '},';
-            }
+            $options=$li->plaintext . ", " .$options;
+        }
+        echo '{';
+        echo '"opties":"' . $options . '"';
+        if ($li_n==$last) {
+            echo '}';
+        } else {
+            echo '},';
         }
     }
 }
