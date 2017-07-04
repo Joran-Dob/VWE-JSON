@@ -1,6 +1,9 @@
 <?php
+ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
+error_reporting(-1);
 header('Content-type:application/json;charset=utf-8');
-$d_url = $_GET["url"];
+$d_url2 = $_GET["url"];
 
 
 
@@ -29,9 +32,7 @@ foreach ($html_details->find('ul') as $p_div) {
 
     foreach ($p_div->find('li') as $photo_a) {
         $last = count($p_div->find('img'));
-        echo $last;
         $photo_n = $photo_n+1;
-        print($photo_a);
         foreach ($photo_a->find('img') as $pic_itm) {
             echo '{';
             echo '"photo":"https://voorraadmodule.vwe-advertentiemanager.nl' . $pic_itm->src . '"';
