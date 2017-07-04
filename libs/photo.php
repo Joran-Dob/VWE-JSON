@@ -5,7 +5,7 @@ $d_url = $_GET["url"];
 
 
 
-$d_url2 = str_replace("/details.html", "/foto.html", $d_url);
+//$d_url2 = str_replace("/details.html", "/foto.html", $d_url);
 
 $curl2 = curl_init();
 curl_setopt($curl2, CURLOPT_SSL_VERIFYPEER, false);
@@ -22,24 +22,26 @@ $html_details = new simple_html_dom();
 // Load HTML from a string
 $html_details->load($d_c);
 echo "[";
-foreach ($html_details->find('div[class=fotogroot clearfix]') as $p_div) {
+foreach ($html_details->find('ul') as $p_div) {
     $photo_n = 0;
 
 
-    $last = count($p_div->find('img'));
 
-    foreach ($p_div->find('img') as $photo_a) {
-        echo '{';
+    foreach ($p_div->find('li') as $photo_a) {
+        $last = count($p_div->find('img'));
+        echo $last;
         $photo_n = $photo_n+1;
-        echo '"photo":"https://www.autowereld.nl' . $photo_a->src . '"';
+        print($photo_a);
+        foreach ($photo_a->find('img') as $pic_itm) {
+            echo '{';
+            echo '"photo":"https://voorraadmodule.vwe-advertentiemanager.nl' . $pic_itm->src . '"';
 
-        if ($photo_n==$last) {
-            echo '}';
-        } else {
-            echo '},';
+            if ($photo_n==$last) {
+                echo '}';
+            } else {
+                echo '},';
+            }
         }
     }
-
 }
   echo "]";
-?>
