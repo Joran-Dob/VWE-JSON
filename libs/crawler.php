@@ -18,64 +18,62 @@ $merk_naam = "";
 // foreach($html->find('img') as $element) echo $element->src . '<br />';
 
 echo "[";
-$arrayt = $html->find('tr[class=item]');
+$arrayt = $html->find('div[class=row]');
 $last = count($arrayt);
 
 
 
-foreach ($html->find('tr[class=item]') as $ts) {
+foreach ($html->find('div[class=row]') as $ts) {
     echo '{';
     $numItems = count($ts);
     $autos++;
-
-    foreach ($ts->find('a[class=deeplink]') as $a) {
-        $d_url= 'https://www.autowereld.nl'.$a->href;
-        echo '"details":"' . $d_url . '", ';
-        foreach ($a->find('img') as $photo) {
-            $photo_url = $photo->getAttribute('src');
-            $photo_url = str_replace("100/", "320/", $photo_url);
-            echo '"icon":"https://www.autowereld.nl' . $photo_url . '", ';
+    foreach ($ts->find('div[class=columnPhoto]') as $pho_c) {
+        foreach ($pho_c->find('a') as $a) {
+            $d_url= 'https://voorraadmodule.vwe-advertentiemanager.nl'.$a->href;
+            echo '"details":"' . $d_url . '", ';
+            foreach ($a->find('img') as $photo) {
+                $photo_url = $photo->getAttribute('src');
+                //$photo_url = str_replace("100/", "320/", $photo_url);
+                echo '"icon":"https://voorraadmodule.vwe-advertentiemanager.nl' . $photo_url . '", ';
+            }
         }
     }
-    foreach ($ts->find('td[class=omschrijving]') as $tf) {
-        foreach ($tf->find('h3') as $title) {
-            echo '"title":"' . $title->plaintext . '", ';
-
-
-
-
-
-
-
-            $merk_naam = explode(' ', trim($title->plaintext))[0];
-            echo '"merk":"' . $merk_naam . '", ';
+    foreach ($ts->find('div[class=columnPrice]') as $priceDiv) {
+        foreach ($priceDiv->find('div[class=price]') as $innerpriceDiv) {
+            foreach ($innerpriceDiv->find('span[class=price_with_currency]') as $prijs) {
+                $prijs = preg_replace('/[^0-9\.]/', '', $prijs->plaintext);
+                echo '"price":"' . $prijs . '", ';
+            }
+        }
+    }
+    foreach ($ts->find('div[class=columnMain]') as $tf) {
+        foreach ($tf->find('a[class=vehicle-list-title]') as $topM) {
+            foreach ($topM->find('span') as $spanTi) {
+                echo '"title":"' . $spanTi->plaintext . '", ';
+                $merk_naam = explode(' ', trim($spanTi->plaintext))[0];
+                echo '"merk":"' . $merk_naam . '", ';
+            }
         }
 
-        foreach ($tf->find('span[class=kenmerken]') as $span) {
+        foreach ($tf->find('dl[class=specs]') as $span) {
             $count++;
+            $dataArray = explode('| ', $span->plaintext);
+            echo '"versnel":"' . $dataArray[3] . '", ';
+            $kilometer = preg_replace('/[^0-9\.]/', '', $dataArray[1]);
+            echo '"kilometer":"' . $kilometer . '", ';
+            $bouwjaar = preg_replace('/[ ]{1,}/', '', $dataArray[0]);
 
-            $dataArray = explode(',', $span->plaintext);
-            echo '"versnel":"' . $dataArray[1] . '", ';
-
-            echo '"brandstof":"' . $dataArray[0] . '", ';
-            echo '"inrichting":"' . $dataArray[2] . '", ';
-            echo '"kleur":"' . $dataArray[3] . '", ';
+            echo '"jaar":"' . $bouwjaar . ' ",';
+            if (!empty($dataArray[4])) {
+                echo '"brandstof":"' . $dataArray[4] . '", ';
+            }
+            echo '"inrichting":"' . $dataArray[2] . '"';
+          //  echo '"kleur":"' . $dataArray[3] . '", ';
         }
     }
-    foreach ($ts->find('td[class=kilometerstand]') as $kilometer) {
-        $kilometer = preg_replace('/[^0-9\.]/', '', $kilometer->plaintext);
-        echo '"kilometer":"' . $kilometer . '", ';
-    }
-    foreach ($ts->find('td[class=prijs]') as $prijs) {
-        $prijs = preg_replace('/[^0-9\.]/', '', $prijs->plaintext);
-        echo '"price":"' . $prijs . '", ';
-    }
 
-    foreach ($ts->find('td[class=bouwjaar]') as $bouwjaar) {
-        $bouwjaar = preg_replace('/[ ]{1,}/', '', $bouwjaar->plaintext);
 
-        echo '"jaar":"' . $bouwjaar . ' "';
-    }
+
 
     $count = 0;
 
