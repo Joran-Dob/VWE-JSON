@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 
 // Dit script kijkt of er een verandering is tussen het huidige json bestand en de oude!
 
@@ -64,7 +65,7 @@ $c_index_F_read = count($index_F_read_array);
 
 if (is_readable("libs/data/autos.json")) {
     if (!strcmp($c_index_F_read, $c_str) == 0) {
-    
+
         fclose($index_F);
 
         $response = sendMessage();

@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 header('Content-type:application/json;charset=utf-8');
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
