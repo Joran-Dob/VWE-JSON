@@ -1,8 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 header('Content-type:application/json;charset=utf-8');
+/* Error Logging
 ini_set('error_reporting', E_ALL);
-ini_set('display_errors', true);
+ini_set('display_errors', true);*/
 ob_start(); // Start output buffering
 
 
