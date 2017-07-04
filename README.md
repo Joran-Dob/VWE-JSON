@@ -6,7 +6,7 @@ This is a PHP script that converts the Dutch VWE Automotive search pages to JSON
 ## Setup
 
 1. Clone this git
-2. Enter your dutch VWE Automotive   URL in the config.php file
+2. Enter your dutch VWE Automotive URL in the config.php file
 3. Upload the files to your web server
 
 ## Usage
