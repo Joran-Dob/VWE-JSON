@@ -3,7 +3,7 @@
 $base = $URL;
 $pages = $PAGES;
 $str = '';
-for ($p = 1; $p <= $pages; $p++) {
+for ($p = 0; $p <= $pages; $p++) {
     $base = $URL;
     $base = $base . $p . '/';
     $curl = curl_init();
